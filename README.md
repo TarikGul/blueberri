@@ -1,15 +1,29 @@
+# Blueberri
+
 ## Summary
 
-This is an example script of using the `asset-transfer-api` to send USDT from Kusama Asset Hub to Shiden while using USDT to pay for fees.
+Tool to aggregate specific github stats about a repository. In active development. More docs incoming soon...
 
-## How to start
 
-Inside of index.ts there are a bunch of `const` values at the top. Feel free to change the values to fit your enviornment.
+## How to run:
 
-There is a `keyphrase.txt` file which stores your seed phrase locally. Please replace the placeholder text in there with your seed phrase
+1. You must first get a github api token, and set it in either a `.env` at the root of the repository as  `API_TOKEN`, or `export API_TOKEN=`.
 
-To run the script - Run:
+2. Run
+
 ```bash
 $ yarn install
-$ yarn start
+$ yarn start -o polkadot-js -r api -s 2024-03-25
 ```
+
+Options:
+      --help        Show help                                              [boolean]
+      --version     Show version number                                    [boolean]
+  -o, --org         The org that owns the repository                        [string]
+  -r, --repo        The repository to query                                 [string]
+  -s, --start-date  Expects a date in ISO format                            [string]
+  -e, --end-date    Expects a date in ISO format                            [string]
+  -w, --write       Path to write the data too                              [string]
+  -c, --config      Path to config. Relative to where the script it called. [string]
+
+  NOTE: org, repo, and start-date are required.
