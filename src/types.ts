@@ -18,6 +18,11 @@ export interface ResolvedConfig {
 }
 
 export type QueriedData = {
+    totalClosedIssues: number;
+    users: UserData
+}
+
+export type UserData = {
     [x: string]: {
         closedIssues: ClosedIssueData
     }

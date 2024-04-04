@@ -1,4 +1,4 @@
-import type { ResolvedConfig, ClosedIssueData, ClosedIssuesItem, QueriedData } from '../types';
+import type { ResolvedConfig, ClosedIssueData, ClosedIssuesItem, QueriedData, UserData } from '../types';
 import type { OctokitResponse } from '@octokit/types';
 import type { Octokit } from 'octokit';
 
@@ -37,6 +37,7 @@ const getClosedIssuesPage = async (api: Octokit, page: number, config: ResolvedC
 export const retrieveAllClosedIssues = async (api: Octokit, config: ResolvedConfig, data: QueriedData): Promise<void> => {
     const concatData: ClosedIssuesItem[] = [];
     const pages = await getClosedIssuesPaged(api, config);
+    let totalCount = 0;
 
     for await(const page of pages) {
 		if (page.status === 200) {
@@ -44,15 +45,18 @@ export const retrieveAllClosedIssues = async (api: Octokit, config: ResolvedConf
         }
 	}
 
-    for (let i = 0; i < concatData.length - 1; i++) {
-        if (data[concatData[i].user.login]) {
-            data[concatData[i].user.login].closedIssues.count = data[concatData[i].user.login].closedIssues.count + 1
+    for (let i = 0; i < concatData.length; i++) {
+        totalCount++
+        if (data.users[concatData[i].user.login]) {
+            data.users[concatData[i].user.login].closedIssues.count = data.users[concatData[i].user.login].closedIssues.count + 1
         } else {
-            (data[concatData[i].user.login] as unknown as QueriedData) = {};
-            data[concatData[i].user.login].closedIssues = {
+            (data.users[concatData[i].user.login] as unknown as UserData) = {};
+            data.users[concatData[i].user.login].closedIssues = {
                 count: 1,
                 contributorType: concatData[i].author_association === 'MEMBER' ? 'internal' : 'external'
             }
         }
     }
+
+    data.totalClosedIssues = totalCount;
 }
