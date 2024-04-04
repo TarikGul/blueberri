@@ -37,6 +37,7 @@ const getClosedIssuesPage = async (api: Octokit, page: number, config: ResolvedC
 export const retrieveAllClosedIssues = async (api: Octokit, config: ResolvedConfig, data: QueriedData): Promise<void> => {
     const concatData: ClosedIssuesItem[] = [];
     const pages = await getClosedIssuesPaged(api, config);
+    const startDate = new Date(config.startDate);
     let totalCount = 0;
 
     for await(const page of pages) {
@@ -46,7 +47,8 @@ export const retrieveAllClosedIssues = async (api: Octokit, config: ResolvedConf
 	}
 
     for (let i = 0; i < concatData.length; i++) {
-        totalCount++
+        if (new Date(concatData[i].closed_at) < startDate) break;
+
         if (data.users[concatData[i].user.login]) {
             data.users[concatData[i].user.login].closedIssues.count = data.users[concatData[i].user.login].closedIssues.count + 1
         } else {
@@ -56,6 +58,8 @@ export const retrieveAllClosedIssues = async (api: Octokit, config: ResolvedConf
                 contributorType: concatData[i].author_association === 'MEMBER' ? 'internal' : 'external'
             }
         }
+        
+        totalCount++
     }
 
     data.totalClosedIssues = totalCount;
