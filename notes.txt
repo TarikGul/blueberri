@@ -1,0 +1,41 @@
+Get merged PR's for a repo
+
+curl \
+-H "Accept: application/vnd.github.v3+json" \
+https://api.github.com/search/issues\?q\=repo:{repo_owner}/{repo}+is:pr+is:merged
+
+
+## Architecture
+
+- CLI
+  - ORG
+  - REPO
+  - start-date
+  - end-date
+  - write
+  - path to config
+
+- JSON config
+  - ORG
+  - REPO
+  - start-date
+  - end-date
+  - filter
+    - Users
+
+- MVP
+
+Total number of PRs / commits merged in time period
+Total number of issues closed in time period
+Number of PRs / commits / issues closed by external contributors in time period
+Perhaps: Number of issues opened by internal / external contributors in time period
+Total number of PRs / commits / issues opened/closed by a specific user
+
+
+NOTES:
+
+Search closed issues:
+https://api.github.com/search/issues?page=1&q=is:issue%20is:closed%20repo:polkadot-js/api
+
+Search closed PR's:
+https://api.github.com/search/issues?page=1&q=is:pull_requests%20is:closed%20repo:polkadot-js/api

@@ -1,0 +1,13 @@
+# Yarn berry
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+
+# Modules
+node_modules
+
+# Build
+/build
+
+# env
+.env
