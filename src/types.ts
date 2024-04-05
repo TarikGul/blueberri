@@ -32,8 +32,15 @@ export type UserData = {
 	[x: string]: {
 		closedIssues: ClosedIssueData;
 		mergedPRs: number;
+		reviews: ReviewData;
 	};
 };
+
+export interface ReviewData {
+	approved: number;
+	changesRequested: number;
+	comments: number;
+}
 
 export interface ClosedIssueData {
 	count: number;
@@ -60,6 +67,7 @@ export interface PrResponse {
 	incomplete_results: boolean;
 	items: {
 		title: string;
+		number: number;
 		user: {
 			login: string;
 		};
@@ -67,4 +75,11 @@ export interface PrResponse {
 			merged_at: string;
 		};
 	}[];
+}
+
+export interface PrReviewResponse {
+	user: {
+		login: string;
+	};
+	state: 'COMMENTED' | 'APPROVED' | 'CHANGES_REQUESTED';
 }

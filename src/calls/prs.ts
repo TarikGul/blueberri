@@ -1,5 +1,5 @@
 import { HEADERS } from '../consts';
-import type { PrResponse, QueriedData, ResolvedConfig, UserData } from '../types';
+import type { PrResponse, PrReviewResponse, QueriedData, ResolvedConfig, UserData } from '../types';
 import { request } from './request';
 
 const checkReleaseTitle = (title: string, config: ResolvedConfig): boolean => {
@@ -35,6 +35,14 @@ const retrieveMergedPRsPage = async (page: number, config: ResolvedConfig): Prom
 	});
 };
 
+const retrieveReviewedPRs = async (prNum: number, config: ResolvedConfig) => {
+	const { repo, org } = config;
+	return await request(`https://api.github.com/repos/${org}/${repo}/pulls/${prNum}/reviews`, {
+		...HEADERS,
+		method: 'GET',
+	});
+};
+
 export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Promise<void> => {
 	const mergedData = [];
 	const pages = await getMergedPRsPaged(config);
@@ -46,7 +54,10 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 		mergedData.push(...page.items);
 	}
 
-	// We should also possibly create a map and request all the reviews of each PR.
+	const mappedReviews = mergedData.map((m) => {
+		return retrieveReviewedPRs(m.number, config);
+	});
+	const reviewRes = (await Promise.all(mappedReviews)) as PrReviewResponse[][];
 
 	// Finds all merged prs
 	for (let i = 0; i < mergedData.length; i++) {
@@ -64,6 +75,38 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 		}
 
 		totalPRsMerged++;
+	}
+
+	// Aggregate reviews
+	for (let i = 0; i < reviewRes.length; i++) {
+		for (let j = 0; j < reviewRes[i].length; j++) {
+			const {
+				state,
+				user: { login },
+			} = reviewRes[i][j];
+
+			if (!data.users[login]) (data.users[login] as unknown as UserData) = {};
+
+			if (!data.users[login].reviews) {
+				data.users[login].reviews = {
+					approved: 0,
+					changesRequested: 0,
+					comments: 0,
+				};
+			}
+
+			if (state === 'APPROVED') {
+				data.users[login].reviews.approved = data.users[login].reviews.approved + 1;
+			}
+
+			if (state === 'CHANGES_REQUESTED') {
+				data.users[login].reviews.changesRequested = data.users[login].reviews.changesRequested + 1;
+			}
+
+			if (state === 'COMMENTED') {
+				data.users[login].reviews.comments = data.users[login].reviews.comments + 1;
+			}
+		}
 	}
 
 	data.totalPRsMerged = totalPRsMerged;

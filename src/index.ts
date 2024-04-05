@@ -57,7 +57,7 @@ const main = async () => {
 	const config = resolveConfig(args);
 	const data = await retreiveAllData(config);
 
-	console.log(data);
+	console.log(data.users['TarikGul']);
 };
 
 main()
