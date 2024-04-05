@@ -6,6 +6,9 @@ export interface ConfigJSON {
 	endDate?: string;
 	writeTo?: string;
 	pathToConfig?: string;
+	pullRequests?: {
+		releasePattern?: string[];
+	};
 }
 
 export interface ResolvedConfig {
@@ -15,11 +18,13 @@ export interface ResolvedConfig {
 	endDate?: string;
 	writeTo?: string;
 	pathToConfig?: string;
+	releasePattern?: string[];
 }
 
 export type QueriedData = {
 	totalClosedIssues: number;
 	totalPRsMerged: number;
+	totalReleases: number;
 	users: UserData;
 };
 

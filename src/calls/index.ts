@@ -11,6 +11,7 @@ export const retreiveAllData = async (config: ResolvedConfig) => {
 		users: {},
 		totalClosedIssues: 0,
 		totalPRsMerged: 0,
+		totalReleases: 0,
 	};
 
 	await retrieveAllClosedIssues(config, data);

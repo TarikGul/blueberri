@@ -40,6 +40,7 @@ const resolveConfig = (args: ArgsType) => {
 	// Not required
 	const endDate = (args.e && parseDate(args.e)) || (load?.endDate && parseDate(load?.endDate));
 	const writeTo = args.w || load?.writeTo;
+	const releasePattern = load?.pullRequests?.releasePattern;
 
 	return {
 		org,
@@ -47,6 +48,7 @@ const resolveConfig = (args: ArgsType) => {
 		startDate,
 		endDate,
 		writeTo,
+		releasePattern,
 	};
 };
 

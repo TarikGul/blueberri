@@ -2,6 +2,12 @@ import { HEADERS } from '../consts';
 import type { PrResponse, QueriedData, ResolvedConfig, UserData } from '../types';
 import { request } from './request';
 
+const checkReleaseTitle = (title: string, config: ResolvedConfig): boolean => {
+	if (!config.releasePattern?.length) return false;
+
+	return config.releasePattern.some((regex) => new RegExp(regex).test(title));
+};
+
 async function* getMergedPRsPaged(config: ResolvedConfig) {
 	let page = 1;
 	let isDone = false;
@@ -34,6 +40,7 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 	const pages = await getMergedPRsPaged(config);
 	const startDate = new Date(config.startDate);
 	let totalPRsMerged = 0;
+	let totalReleases = 0;
 
 	for await (const page of pages) {
 		mergedData.push(...page.items);
@@ -44,6 +51,10 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 	// Finds all merged prs
 	for (let i = 0; i < mergedData.length; i++) {
 		if (new Date(mergedData[i].pull_request.merged_at) < startDate) break;
+
+		if (checkReleaseTitle(mergedData[i].title, config)) {
+			totalReleases++;
+		}
 
 		if (data.users[mergedData[i].user.login] && data.users[mergedData[i].user.login].mergedPRs) {
 			data.users[mergedData[i].user.login].mergedPRs = data.users[mergedData[i].user.login].mergedPRs + 1;
@@ -56,4 +67,5 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 	}
 
 	data.totalPRsMerged = totalPRsMerged;
+	data.totalReleases = totalReleases;
 };

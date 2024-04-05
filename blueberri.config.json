@@ -1,7 +1,7 @@
 {
-    "pull_requests": {
-        "ignore_pattern": [],
-        "release_pattern": []
+    "pullRequests": {
+        "ignorePattern": [],
+        "releasePattern": ["\\d+\\.\\d+\\.\\d+"]
     },
-    "ignore_author": ["polkadot-js-bot"]
+    "ignoreAuthor": ["polkadot-js-bot"]
 }
