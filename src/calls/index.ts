@@ -1,11 +1,8 @@
-import { config } from 'dotenv';
-
 import type { QueriedData, ResolvedConfig } from '../types';
 import { retrieveAllClosedIssues } from './closedIssues';
 import { retrieveAllOpenedIssues } from './openedIssues';
 import { retrievePRs } from './prs';
-
-config();
+import { retrieveAllReleases } from './releases';
 
 export const retreiveAllData = async (config: ResolvedConfig) => {
 	const data: QueriedData = {
@@ -18,6 +15,7 @@ export const retreiveAllData = async (config: ResolvedConfig) => {
 
 	await retrieveAllOpenedIssues(config, data);
 	await retrieveAllClosedIssues(config, data);
+	await retrieveAllReleases(config, data);
 	await retrievePRs(config, data);
 
 	return data;
