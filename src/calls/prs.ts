@@ -15,7 +15,6 @@ async function* getMergedPRsPaged(config: ResolvedConfig) {
 		const res = await retrieveMergedPRsPage(page, config);
 
 		yield res;
-		console.log(res);
 
 		const len = res.items.length;
 		const lastEntryDate = new Date(res.items[len - 1].pull_request.merged_at);

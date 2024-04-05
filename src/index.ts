@@ -22,12 +22,11 @@ const parseDate = (d: string): string => {
  */
 const resolveConfig = (args: ArgsType) => {
 	// FIXME the pathing is brokedn for the json config file.
-	const pathToConfig =
-		args.c || path.dirname(__filename) + './blueberri.config.json';
-	const load = fs.existsSync(pathToConfig)
+	const pathToConfig = args.c
+	const load = pathToConfig && fs.existsSync(pathToConfig)
 		? // eslint-disable-next-line @typescript-eslint/no-var-requires
 		  (JSON.parse(
-				fs.readFileSync('./blueberri.config.json', 'utf8')
+				fs.readFileSync(pathToConfig, 'utf8')
 		  ) as ConfigJSON)
 		: null;
 	if (!load) console.warn('No blueberry.config.json detected');
