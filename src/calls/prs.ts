@@ -1,10 +1,5 @@
 import { HEADERS } from '../consts';
-import type {
-	PrResponse,
-	QueriedData,
-	ResolvedConfig,
-	UserData,
-} from '../types';
+import type { PrResponse, QueriedData, ResolvedConfig, UserData } from '../types';
 import { request } from './request';
 
 async function* getMergedPRsPaged(config: ResolvedConfig) {
@@ -26,21 +21,15 @@ async function* getMergedPRsPaged(config: ResolvedConfig) {
 	}
 }
 
-const retrieveMergedPRsPage = async (
-	page: number,
-	config: ResolvedConfig
-): Promise<PrResponse> => {
+const retrieveMergedPRsPage = async (page: number, config: ResolvedConfig): Promise<PrResponse> => {
 	const { repo, org } = config;
-	return await request(
-		`https://api.github.com/search/issues?page=${page}&q=is:pr%20is:merged%20repo:${org}/${repo}`,
-		{ ...HEADERS, method: 'GET' }
-	);
+	return await request(`https://api.github.com/search/issues?page=${page}&q=is:pr%20is:merged%20repo:${org}/${repo}`, {
+		...HEADERS,
+		method: 'GET',
+	});
 };
 
-export const retrievePRs = async (
-	config: ResolvedConfig,
-	data: QueriedData
-): Promise<void> => {
+export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Promise<void> => {
 	const mergedData = [];
 	const pages = await getMergedPRsPaged(config);
 	const startDate = new Date(config.startDate);
@@ -56,12 +45,8 @@ export const retrievePRs = async (
 	for (let i = 0; i < mergedData.length; i++) {
 		if (new Date(mergedData[i].pull_request.merged_at) < startDate) break;
 
-		if (
-			data.users[mergedData[i].user.login] &&
-			data.users[mergedData[i].user.login].mergedPRs
-		) {
-			data.users[mergedData[i].user.login].mergedPRs =
-				data.users[mergedData[i].user.login].mergedPRs + 1;
+		if (data.users[mergedData[i].user.login] && data.users[mergedData[i].user.login].mergedPRs) {
+			data.users[mergedData[i].user.login].mergedPRs = data.users[mergedData[i].user.login].mergedPRs + 1;
 		} else {
 			(data.users[mergedData[i].user.login] as unknown as UserData) = {};
 			data.users[mergedData[i].user.login].mergedPRs = 1;

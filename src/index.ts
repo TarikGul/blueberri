@@ -1,6 +1,5 @@
 import assert from 'node:assert';
 import fs from 'node:fs';
-import path from 'node:path';
 
 import { retreiveAllData } from './calls/index';
 import { ArgsType, argv } from './cli';
@@ -22,29 +21,24 @@ const parseDate = (d: string): string => {
  */
 const resolveConfig = (args: ArgsType) => {
 	// FIXME the pathing is brokedn for the json config file.
-	const pathToConfig = args.c
-	const load = pathToConfig && fs.existsSync(pathToConfig)
-		? // eslint-disable-next-line @typescript-eslint/no-var-requires
-		  (JSON.parse(
-				fs.readFileSync(pathToConfig, 'utf8')
-		  ) as ConfigJSON)
-		: null;
+	const pathToConfig = args.c;
+	const load =
+		pathToConfig && fs.existsSync(pathToConfig)
+			? // eslint-disable-next-line @typescript-eslint/no-var-requires
+			  (JSON.parse(fs.readFileSync(pathToConfig, 'utf8')) as ConfigJSON)
+			: null;
 	if (!load) console.warn('No blueberry.config.json detected');
 
 	// Required
 	const org = args.o || load?.org;
 	const repo = args.r || load?.repo;
-	const startDate =
-		(args.s && parseDate(args.s)) ||
-		(load?.startDate && parseDate(load?.startDate));
+	const startDate = (args.s && parseDate(args.s)) || (load?.startDate && parseDate(load?.startDate));
 	assert(org, 'Org arg is required!');
 	assert(repo, 'Repo arg is required!');
 	assert(startDate, 'Start date is required!');
 
 	// Not required
-	const endDate =
-		(args.e && parseDate(args.e)) ||
-		(load?.endDate && parseDate(load?.endDate));
+	const endDate = (args.e && parseDate(args.e)) || (load?.endDate && parseDate(load?.endDate));
 	const writeTo = args.w || load?.writeTo;
 
 	return {
