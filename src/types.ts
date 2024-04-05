@@ -19,12 +19,14 @@ export interface ResolvedConfig {
 
 export type QueriedData = {
 	totalClosedIssues: number;
+	totalPRsMerged: number;
 	users: UserData;
 };
 
 export type UserData = {
 	[x: string]: {
 		closedIssues: ClosedIssueData;
+		mergedPRs: number;
 	};
 };
 
@@ -46,4 +48,18 @@ export interface ClosedIssuesItem {
 	};
 	closed_at: string;
 	author_association: string;
+}
+
+export interface PrResponse {
+	total_count: number;
+	incomplete_results: boolean;
+	items: {
+		title: string;
+		user: {
+			login: string;
+		};
+		pull_request: {
+			merged_at: string;
+		};
+	}[];
 }

@@ -39,3 +39,21 @@ https://api.github.com/search/issues?page=1&q=is:issue%20is:closed%20repo:polkad
 
 Search closed PR's:
 https://api.github.com/search/issues?page=1&q=is:pull_requests%20is:closed%20repo:polkadot-js/api
+
+Current Structure:
+
+{
+  users: {
+    TarikGul: { 
+      closedIssues: {
+        count: number
+      },
+      mergedPrs: 0;
+      reviews: 0;
+    },
+  },
+  totalClosedIssues: number
+  totalPRsMerged: number
+  totalReleases: number
+  contributorType: 'external' | 'internal'
+}

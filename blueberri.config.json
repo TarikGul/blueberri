@@ -1,0 +1,7 @@
+{
+    "pull_requests": {
+        "ignore_pattern": [],
+        "release_pattern": []
+    },
+    "ignore_author": ["polkadot-js-bot"]
+}
