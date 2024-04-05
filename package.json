@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@octokit/types": "^13.0.0",
