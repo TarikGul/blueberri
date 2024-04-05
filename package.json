@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./build/src/index.js"
+    "start": "tsc && node ./build/src/index.js",
+    "lint": "eslint . --ext .ts -c .eslintrc --fix"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,13 @@
     "@octokit/types": "^13.0.0",
     "@types/node": "^20.12.2",
     "@types/yargs": "^17.0.32",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "prettier": "^2.7.1",
     "typescript": "^5.4.3"
   },
   "dependencies": {
