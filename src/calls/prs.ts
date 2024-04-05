@@ -1,5 +1,5 @@
-import { HEADERS } from '../consts';
-import type { PrResponse, PrReviewResponse, QueriedData, ResolvedConfig, UserData } from '../types';
+import { HEADERS, USER_TEMPLATE } from '../consts';
+import type { PrResponse, PrReviewResponse, QueriedData, ResolvedConfig } from '../types';
 import { request } from './request';
 
 const checkReleaseTitle = (title: string, config: ResolvedConfig): boolean => {
@@ -67,12 +67,10 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 			totalReleases++;
 		}
 
-		if (data.users[mergedData[i].user.login] && data.users[mergedData[i].user.login].mergedPRs) {
-			data.users[mergedData[i].user.login].mergedPRs = data.users[mergedData[i].user.login].mergedPRs + 1;
-		} else {
-			(data.users[mergedData[i].user.login] as unknown as UserData) = {};
-			data.users[mergedData[i].user.login].mergedPRs = 1;
-		}
+		if (!data.users[mergedData[i].user.login]) data.users[mergedData[i].user.login] = Object.assign({}, USER_TEMPLATE);
+
+		const prevCount = data.users[mergedData[i].user.login].mergedPRs;
+		data.users[mergedData[i].user.login].mergedPRs = prevCount + 1;
 
 		totalPRsMerged++;
 	}
@@ -85,15 +83,7 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 				user: { login },
 			} = reviewRes[i][j];
 
-			if (!data.users[login]) (data.users[login] as unknown as UserData) = {};
-
-			if (!data.users[login].reviews) {
-				data.users[login].reviews = {
-					approved: 0,
-					changesRequested: 0,
-					comments: 0,
-				};
-			}
+			if (!data.users[login]) data.users[login] = Object.assign({}, USER_TEMPLATE);
 
 			if (state === 'APPROVED') {
 				data.users[login].reviews.approved = data.users[login].reviews.approved + 1;

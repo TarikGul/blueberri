@@ -30,7 +30,7 @@ export type QueriedData = {
 
 export type UserData = {
 	[x: string]: {
-		closedIssues: ClosedIssueData;
+		closedIssues: number;
 		mergedPRs: number;
 		reviews: ReviewData;
 	};
@@ -40,11 +40,6 @@ export interface ReviewData {
 	approved: number;
 	changesRequested: number;
 	comments: number;
-}
-
-export interface ClosedIssueData {
-	count: number;
-	contributorType: 'external' | 'internal';
 }
 
 export interface OctokitBase<T> {

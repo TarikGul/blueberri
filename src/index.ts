@@ -58,6 +58,7 @@ const main = async () => {
 	const data = await retreiveAllData(config);
 
 	console.log(data.users['TarikGul']);
+	console.log(data);
 };
 
 main()
