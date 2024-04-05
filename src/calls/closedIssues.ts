@@ -1,5 +1,5 @@
 import { HEADERS, PAGE_SIZE, USER_TEMPLATE } from '../consts';
-import type { ClosedIssuesItem, QueriedData, ResolvedConfig } from '../types';
+import type { IssuesItem, QueriedData, ResolvedConfig } from '../types';
 import { request } from './request';
 
 async function* getClosedIssuesPaged(config: ResolvedConfig) {
@@ -10,7 +10,6 @@ async function* getClosedIssuesPaged(config: ResolvedConfig) {
 		const res = await getClosedIssuesPage(page, config);
 
 		yield res;
-		console.log;
 
 		const len = res.items.length;
 		const lastEntryDate = new Date(res.items[len - 1].closed_at);
@@ -22,7 +21,7 @@ async function* getClosedIssuesPaged(config: ResolvedConfig) {
 	}
 }
 
-const getClosedIssuesPage = async (page: number, config: ResolvedConfig): Promise<{ items: ClosedIssuesItem[] }> => {
+const getClosedIssuesPage = async (page: number, config: ResolvedConfig): Promise<{ items: IssuesItem[] }> => {
 	const { repo, org } = config;
 	return await request(
 		`https://api.github.com/search/issues?per_page=${PAGE_SIZE}&page=${page}&q=is:issue%20is:closed%20repo:${org}/${repo}`,
@@ -31,7 +30,7 @@ const getClosedIssuesPage = async (page: number, config: ResolvedConfig): Promis
 };
 
 export const retrieveAllClosedIssues = async (config: ResolvedConfig, data: QueriedData): Promise<void> => {
-	const concatData: ClosedIssuesItem[] = [];
+	const concatData: IssuesItem[] = [];
 	const pages = await getClosedIssuesPaged(config);
 	const startDate = new Date(config.startDate);
 	let totalCount = 0;

@@ -23,6 +23,7 @@ export interface ResolvedConfig {
 
 export type QueriedData = {
 	totalClosedIssues: number;
+	totalOpenedIssues: number;
 	totalPRsMerged: number;
 	totalReleases: number;
 	users: UserData;
@@ -49,11 +50,12 @@ export interface OctokitBase<T> {
 	data: T;
 }
 
-export interface ClosedIssuesItem {
+export interface IssuesItem {
 	user: {
 		login: string;
 	};
 	closed_at: string;
+	created_at: string;
 	author_association: string;
 }
 
