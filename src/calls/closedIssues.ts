@@ -1,6 +1,7 @@
-import { HEADERS, PAGE_SIZE, USER_TEMPLATE } from '../consts';
+import { HEADERS, PAGE_SIZE } from '../consts';
 import type { IssuesItem, QueriedData, ResolvedConfig } from '../types';
 import { request } from './request';
+import { createUserTemplate } from './util';
 
 async function* getClosedIssuesPaged(config: ResolvedConfig) {
 	let page = 1;
@@ -43,7 +44,7 @@ export const retrieveAllClosedIssues = async (config: ResolvedConfig, data: Quer
 		if (new Date(concatData[i].closed_at) < startDate) break;
 
 		// When the user doesn't exists. Create a template for them.
-		if (!data.users[concatData[i].user.login]) data.users[concatData[i].user.login] = Object.assign({}, USER_TEMPLATE);
+		if (!data.users[concatData[i].user.login]) data.users[concatData[i].user.login] = createUserTemplate();
 
 		const prevCount = data.users[concatData[i].user.login].closedIssues;
 		data.users[concatData[i].user.login].closedIssues = prevCount + 1;

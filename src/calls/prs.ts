@@ -1,6 +1,7 @@
-import { HEADERS, USER_TEMPLATE } from '../consts';
+import { HEADERS } from '../consts';
 import type { PrResponse, PrReviewResponse, QueriedData, ResolvedConfig } from '../types';
 import { request } from './request';
+import { createUserTemplate } from './util';
 
 async function* getMergedPRsPaged(config: ResolvedConfig) {
 	let page = 1;
@@ -56,7 +57,7 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 	for (let i = 0; i < mergedData.length; i++) {
 		if (new Date(mergedData[i].pull_request.merged_at) < startDate) break;
 
-		if (!data.users[mergedData[i].user.login]) data.users[mergedData[i].user.login] = Object.assign({}, USER_TEMPLATE);
+		if (!data.users[mergedData[i].user.login]) data.users[mergedData[i].user.login] = createUserTemplate();
 
 		const prevCount = data.users[mergedData[i].user.login].mergedPRs;
 		data.users[mergedData[i].user.login].mergedPRs = prevCount + 1;
@@ -72,7 +73,7 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 				user: { login },
 			} = reviewRes[i][j];
 
-			if (!data.users[login]) data.users[login] = Object.assign({}, USER_TEMPLATE);
+			if (!data.users[login]) data.users[login] = createUserTemplate();
 
 			if (state === 'APPROVED') {
 				data.users[login].reviews.approved = data.users[login].reviews.approved + 1;
