@@ -13,7 +13,7 @@ Tool to aggregate specific github stats about a repository. In active developmen
 
 ```bash
 $ yarn install
-$ yarn start -o polkadot-js -r api -s 2024-03-25
+$ yarn start -o <org_name> -r <repo_name> -s 2024-03-25
 ```
 
 Options:
