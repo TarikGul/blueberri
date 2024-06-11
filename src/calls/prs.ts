@@ -13,6 +13,10 @@ async function* getMergedPRsPaged(config: ResolvedConfig) {
 		yield res;
 
 		const len = res.items.length;
+		if (len === 0) {
+			isDone = true;
+			break;
+		}
 		const lastEntryDate = new Date(res.items[len - 1].pull_request.merged_at);
 		if (lastEntryDate < new Date(config.startDate)) {
 			isDone = true;

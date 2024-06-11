@@ -12,6 +12,10 @@ async function* getReleasePaged(config: ResolvedConfig) {
 		yield res;
 
 		const len = res.length;
+		if (len === 0) {
+			isDone = true;
+			break;
+		}
 		const lastEntryDate = new Date(res[len - 1].created_at);
 		if (lastEntryDate < new Date(config.startDate)) {
 			isDone = true;
