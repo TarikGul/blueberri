@@ -44,6 +44,10 @@ export const retrieveAllClosedIssues = async (config: ResolvedConfig, data: Quer
 		concatData.push(...page.items);
 	}
 
+	concatData.sort(
+		(a, b) => (new Date(b.closed_at) as unknown as number) - (new Date(a.closed_at) as unknown as number)
+	);
+
 	for (let i = 0; i < concatData.length; i++) {
 		if (new Date(concatData[i].closed_at) < startDate) break;
 

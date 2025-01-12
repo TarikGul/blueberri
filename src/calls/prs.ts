@@ -71,24 +71,26 @@ export const retrievePRs = async (config: ResolvedConfig, data: QueriedData): Pr
 
 	// Aggregate reviews
 	for (let i = 0; i < reviewRes.length; i++) {
-		for (let j = 0; j < reviewRes[i].length; j++) {
-			const {
-				state,
-				user: { login },
-			} = reviewRes[i][j];
+		if (reviewRes[i] && reviewRes[i].length) {
+			for (let j = 0; j < reviewRes[i].length; j++) {
+				const {
+					state,
+					user: { login },
+				} = reviewRes[i][j];
 
-			if (!data.users[login]) data.users[login] = createUserTemplate();
+				if (!data.users[login]) data.users[login] = createUserTemplate();
 
-			if (state === 'APPROVED') {
-				data.users[login].reviews.approved = data.users[login].reviews.approved + 1;
-			}
+				if (state === 'APPROVED') {
+					data.users[login].reviews.approved = data.users[login].reviews.approved + 1;
+				}
 
-			if (state === 'CHANGES_REQUESTED') {
-				data.users[login].reviews.changesRequested = data.users[login].reviews.changesRequested + 1;
-			}
+				if (state === 'CHANGES_REQUESTED') {
+					data.users[login].reviews.changesRequested = data.users[login].reviews.changesRequested + 1;
+				}
 
-			if (state === 'COMMENTED') {
-				data.users[login].reviews.comments = data.users[login].reviews.comments + 1;
+				if (state === 'COMMENTED') {
+					data.users[login].reviews.comments = data.users[login].reviews.comments + 1;
+				}
 			}
 		}
 	}
